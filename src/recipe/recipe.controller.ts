@@ -34,7 +34,6 @@ export class RecipeController {
     return this.recipeService.searchRecipeByTitle(page, limit, title);
   }
 
-
   @Get('filter')
   filterBasedOneType(
     @Query('difficultyLevel') difficultyLevel?: RecipeDifficulty,
@@ -43,10 +42,7 @@ export class RecipeController {
     return this.recipeService.filterBasedOnType(difficultyLevel, category);
   }
 
- @Get('search')
-getRecipes(@Query() query: GetRecipesQueryDto) {
-  return this.recipeService.getFilteredRecipes(query);
-}
+
 
 
 }
