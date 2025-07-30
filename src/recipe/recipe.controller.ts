@@ -17,30 +17,35 @@ export class RecipeController {
     return this.recipeService.createRecipe(createRecipeDto, userId);
   }
 
-
   @Get('all')
-  findAll(@Query('page') page: number = 1,
-    @Query('limit') limit: number = 5,
-  ) {
-    return this.recipeService.getAllRecipes(+page, +limit);
+  async getFilteredRecipes(@Query() query: GetRecipesQueryDto) {
+    return this.recipeService.getFilteredRecipes(query);
   }
 
-  @Get('search')
-  getRecipe(
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 10,
-    @Query('title') title: string
-  ) {
-    return this.recipeService.searchRecipeByTitle(page, limit, title);
-  }
 
-  @Get('filter')
-  filterBasedOneType(
-    @Query('difficultyLevel') difficultyLevel?: RecipeDifficulty,
-    @Query('category') category?: RecipeCategory
-  ) {
-    return this.recipeService.filterBasedOnType(difficultyLevel, category);
-  }
+  // @Get('all')
+  // findAll(@Query('page') page: number = 1,
+  //   @Query('limit') limit: number = 5,
+  // ) {
+  //   return this.recipeService.getAllRecipes(+page, +limit);
+  // }
+
+  // @Get('search')
+  // getRecipe(
+  //   @Query('page') page: number = 1,
+  //   @Query('limit') limit: number = 10,
+  //   @Query('title') title: string
+  // ) {
+  //   return this.recipeService.searchRecipeByTitle(page, limit, title);
+  // }
+
+  // @Get('filter')
+  // filterBasedOneType(
+  //   @Query('difficultyLevel') difficultyLevel?: RecipeDifficulty,
+  //   @Query('category') category?: RecipeCategory
+  // ) {
+  //   return this.recipeService.filterBasedOnType(difficultyLevel, category);
+  // }
 
 
 

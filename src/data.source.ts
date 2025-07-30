@@ -2,6 +2,7 @@ import * as dotenv from 'dotenv';
 import { DataSource } from 'typeorm';
 import { User } from './user/entities/user.entity';
 import { Recipe } from './recipe/entities/recipe.entity';
+import { Favorite } from './favorite/entities/favorite.entity';
 
 
 dotenv.config();
@@ -13,7 +14,7 @@ const AppDataSource = new DataSource({
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
- entities:[User,Recipe],
+ entities:[User,Recipe,Favorite],
   migrations: [__dirname + '/migrations/*.{ts,js}'],
   synchronize: false,
 });
