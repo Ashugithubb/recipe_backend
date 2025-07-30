@@ -9,5 +9,6 @@ import { UserModule } from 'src/user/user.module';
   imports:[TypeOrmModule.forFeature([Recipe]),UserModule],
   controllers: [RecipeController],
   providers: [RecipeService],
+  exports:[RecipeService]
 })
 export class RecipeModule {}

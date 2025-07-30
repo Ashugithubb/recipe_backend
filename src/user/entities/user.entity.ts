@@ -1,6 +1,7 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Gender } from "../enum/user.enum";
 import { Recipe } from "src/recipe/entities/recipe.entity";
+import { Favorite } from "src/favorite/entities/favorite.entity";
 
 @Entity('users')
 export class User {
@@ -23,10 +24,10 @@ export class User {
     })
     gender: Gender
 
-    @Column('simple-array',{nullable:true})
-    favorites: number[]
-
     @OneToMany(()=>Recipe,(r)=>r.user)
     recipes:Recipe[]
+
+    @OneToMany(()=>Favorite,(f)=>f.user)
+    favorite:Favorite[]
 
 }

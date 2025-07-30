@@ -1,5 +1,5 @@
 
-import { IsString, IsArray, IsNotEmpty, IsUrl } from 'class-validator';
+import { IsString, IsArray, IsNotEmpty, IsUrl, IS_BOOLEAN_STRING, IsOptional } from 'class-validator';
 
 export class CreateRecipeDto {
   @IsString()
@@ -16,5 +16,6 @@ export class CreateRecipeDto {
 
   @IsString()
   @IsUrl()
+  @IsOptional()
   imageUrl: string;
 }

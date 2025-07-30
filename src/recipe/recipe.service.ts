@@ -3,9 +3,11 @@ import { CreateRecipeDto } from './dto/create-recipe.dto';
 import { UpdateRecipeDto } from './dto/update-recipe.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Recipe } from './entities/recipe.entity';
-import { ILike, Repository } from 'typeorm';
+import { FindOptionsWhere, ILike, Repository } from 'typeorm';
 import { UserService } from 'src/user/user.service';
 import { In } from 'typeorm';
+import { RecipeCategory, RecipeDifficulty } from './enum/recepie.enum';
+import { GetRecipesQueryDto } from './dto/query.dto';
 @Injectable()
 export class RecipeService {
   constructor(@InjectRepository(Recipe) private readonly recipeRepo: Repository<Recipe>,
@@ -39,52 +41,67 @@ export class RecipeService {
     return await this.recipeRepo.find(
       {
         take: limit,
-        skip
+        skip,
+        select: ['id', 'title', 'ingredients', 'steps',]
       }
     );
   }
 
-  async addFavourite(recipeId: number, userId: number) {
-    const user = await this.userService.findOne(userId);
-    if (!user) throw new ForbiddenException("You are not Logged In");
 
-    if (!user.favorites) user.favorites = [];
+  async findOne(id: number) {
+    return await this.recipeRepo.findOneBy({ id });
+  }
 
-    user.favorites.push(recipeId);
 
-    await this.userService.update(userId, user);
+  async filterBasedOnType(
+    difficultyLevel?: RecipeDifficulty,
+    category?: RecipeCategory
+  ) {
+    const where: FindOptionsWhere<Recipe> = {};
+    if (difficultyLevel) {
+      where.difficultyLevel = difficultyLevel;
+    }
+    if (category) {
+      where.category = category;
+    }
 
-    return { msg: "Added to Favourite" };
+    return this.recipeRepo.find({ where });
   }
 
 
 
-async getAllUserFavorite(userId: number) {
-  const user = await this.userService.findOne(userId);
-  const favoriteIds = user?.favorites;
+  async getFilteredRecipes(query: GetRecipesQueryDto) {
+    const { page = 1, limit = 10, title, difficultyLevel, category } = query;
 
-  if (!favoriteIds || favoriteIds.length === 0) {
-    return [];
+    const where: any = {};
+
+    if (title) {
+      where.title = ILike(`%${title}%`);
+    }
+
+    if (difficultyLevel) {
+      where.difficultyLevel = difficultyLevel;
+    }
+
+    if (category) {
+      where.category = category;
+    }
+
+    const [data, total] = await this.recipeRepo.findAndCount({
+      where,
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    return {
+      data,
+      total,
+      page,
+      limit,
+    };
   }
 
-  const favoriteRestaurants = await this.recipeRepo.find({
-    where: { id: In(favoriteIds) },
-  });
-
-  return favoriteRestaurants;
-}
 
 
 
-  findOne(id: number) {
-    return `This action returns a #${id} recipe`;
-  }
-
-  update(id: number, updateRecipeDto: UpdateRecipeDto) {
-    return `This action updates a #${id} recipe`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} recipe`;
-  }
 }
