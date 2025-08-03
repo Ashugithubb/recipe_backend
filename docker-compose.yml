@@ -6,7 +6,7 @@ services:
       POSTGRES_PASSWORD: zenashu1520@
       POSTGRES_DB: recipe_db
     ports:
-      - '5050:5432'
+      - '5432:5432'
     volumes:
       - postgres_data:/var/lib/postgresql/data
     restart: unless-stopped
